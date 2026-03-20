@@ -266,9 +266,10 @@ em, i {
 ### **convert-to-kindle.ps1 の実行**
 
 ```powershell
-# c:\dev\apps\clean-architecture\kindle フォルダで実行
+# c:\dev\apps\clean-architecture で実行
 
-.\convert-to-kindle.ps1
+.\.github\skills\ebook-build\scripts\invoke-ebook-build.ps1 `
+  -ConfigFile .\.github\skills\ebook-build\configs\clean-architecture.build.json
 ```
 
 ### **変換ツールの役割**
@@ -282,11 +283,10 @@ em, i {
 ### **出力ファイル**
 
 ```
-output/
+ebook-output/
 ├── clean-architecture.azw3    ← KDP への推奨フォーマット
 ├── clean-architecture.epub    ← 汎用電子書籍フォーマット
-├── clean-architecture.mobi    ← 旧形式（参考用）
-└── metadata.cleaned.yaml      ← クリーニング済みメタデータ
+└── clean-architecture.mobi    ← 旧形式（参考用）
 ```
 
 ---
