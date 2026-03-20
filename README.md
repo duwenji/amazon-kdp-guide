@@ -112,6 +112,9 @@ git submodule update --init --recursive
 git submodule update --remote --merge .github/skills
 ```
 
+共有 Skill リポジトリ:
+- https://github.com/duwenji/shared-copilot-skills
+
 ### **clean-architecture を Amazon KDP で販売する最短フロー**
 
 ```
