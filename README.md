@@ -102,6 +102,16 @@ cd c:\dev\apps\amazon-kdp-guide
 出力先:
 - `./ebook-output/`
 
+submodule 運用コマンド:
+
+```powershell
+# 初回 clone 後
+git submodule update --init --recursive
+
+# 共有 Skill の更新取り込み
+git submodule update --remote --merge .github/skills
+```
+
 ### **clean-architecture を Amazon KDP で販売する最短フロー**
 
 ```
