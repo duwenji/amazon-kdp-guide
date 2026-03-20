@@ -269,7 +269,7 @@ em, i {
 # c:\dev\apps\clean-architecture で実行
 
 .\.github\skills\ebook-build\scripts\invoke-ebook-build.ps1 `
-  -ConfigFile .\.github\skills\ebook-build\configs\clean-architecture.build.json
+  -ConfigFile .\.github\skills-config\ebook-build\clean-architecture.build.json
 ```
 
 ### **変換ツールの役割**

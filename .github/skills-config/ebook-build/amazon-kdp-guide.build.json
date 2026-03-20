@@ -2,7 +2,7 @@
   "sourceRoot": ".",
   "outputDir": ".\\ebook-output",
   "projectName": "amazon-kdp-guide",
-  "metadataFile": ".\\.github\\skills\\ebook-build\\configs\\amazon-kdp-guide.metadata.yaml",
+  "metadataFile": ".\\.github\\skills-config\\ebook-build\\amazon-kdp-guide.metadata.yaml",
   "styleFile": ".\\.github\\skills\\ebook-build\\assets\\style.css",
   "formats": ["epub", "azw3", "mobi"],
   "enablePageList": true,

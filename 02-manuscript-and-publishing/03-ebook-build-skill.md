@@ -90,7 +90,7 @@ ebook-convert --version
 ```powershell
 cd c:\dev\apps\amazon-kdp-guide
 .\.github\skills\ebook-build\scripts\invoke-ebook-build.ps1 `
-  -ConfigFile .\.github\skills\ebook-build\configs\amazon-kdp-guide.build.json
+  -ConfigFile .\.github\skills-config\ebook-build\amazon-kdp-guide.build.json
 ```
 
 ### パラメータを直接指定する場合
@@ -119,7 +119,7 @@ cd c:\dev\apps\amazon-kdp-guide
 | `ChapterFilePattern` | — | `^\d{2}-.*\.md$` | チャプターファイルを識別する正規表現パターン |
 | `CoverFile` | — | `00-COVER.md` | カバーとして扱う Markdown ファイル名 |
 | `PreserveTemp` | — | `false` | ビルド後に一時ディレクトリを保持するか |
-| `MetadataFile` | — | `configs/amazon-kdp-guide.metadata.yaml` | メタデータ YAML ファイルのパス（上書き） |
+| `MetadataFile` | — | `.github/skills-config/ebook-build/amazon-kdp-guide.metadata.yaml` | メタデータ YAML ファイルのパス（上書き） |
 | `StyleFile` | — | `assets/style.css` | EPUB スタイルシートのパス（上書き） |
 | `ConfigFile` | — | — | JSON 設定ファイルのパス（指定時は他パラメータを上書き） |
 
@@ -130,7 +130,7 @@ cd c:\dev\apps\amazon-kdp-guide
 ### メタデータ（タイトル・著者・説明）
 
 ```text
-.github/skills/ebook-build/configs/amazon-kdp-guide.metadata.yaml
+.github/skills-config/ebook-build/amazon-kdp-guide.metadata.yaml
 ```
 
 書籍タイトル・著者名・説明文・言語などを編集します。  
@@ -147,7 +147,7 @@ EPUB に適用される CSS ファイルです。Kindle 互換性を維持しな
 ### 実行設定（出力フォーマット・パターン等）
 
 ```text
-.github/skills/ebook-build/configs/amazon-kdp-guide.build.json
+.github/skills-config/ebook-build/amazon-kdp-guide.build.json
 ```
 
 ```json
@@ -155,7 +155,7 @@ EPUB に適用される CSS ファイルです。Kindle 互換性を維持しな
   "sourceRoot": ".",
   "outputDir": ".\\ebook-output",
   "projectName": "amazon-kdp-guide",
-  "metadataFile": ".\\.github\\skills\\ebook-build\\configs\\amazon-kdp-guide.metadata.yaml",
+  "metadataFile": ".\\.github\\skills-config\\ebook-build\\amazon-kdp-guide.metadata.yaml",
   "styleFile": ".\\.github\\skills\\ebook-build\\assets\\style.css",
   "formats": ["epub", "azw3", "mobi"],
   "enablePageList": true,
