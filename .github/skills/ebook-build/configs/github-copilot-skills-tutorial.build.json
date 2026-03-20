@@ -1,0 +1,10 @@
+{
+  "sourceRoot": "..\\github-copilot-skills-tutorial\\docs",
+  "outputDir": "..\\github-copilot-skills-tutorial\\ebook-output",
+  "projectName": "github-copilot-skills-tutorial",
+  "formats": ["epub", "azw3", "mobi"],
+  "enablePageList": true,
+  "chapterDirPattern": "^\\d{2}-",
+  "chapterFilePattern": "^\\d{2}-.*\\.md$",
+  "coverFile": "00-COVER.md"
+}

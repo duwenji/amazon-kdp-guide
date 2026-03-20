@@ -722,6 +722,11 @@ function Convert-ToMobi {
 # エントリポイント
 # ============================================
 
+# pageList 機能を読み込む
+$pageListFunctionsPath = Join-Path $scriptDir "add-pagelist-functions.ps1"
+if (Test-Path $pageListFunctionsPath) {
+    . $pageListFunctionsPath
+}
 function Main {
     # 出力フォルダを作成
     if (-not (Test-Path $outputDir)) {
@@ -790,6 +795,7 @@ function Main {
 
     Convert-ToEpub -ManuscriptPath $manuscriptPath -EffectiveMetadataFile $effectiveMetadataFile -StyleFile $styleFile -EpubOutput $epubOutput
     Convert-ToAzw3 -EpubOutput $epubOutput -Azw3Output $azw3Output -EbookConvert $ebookConvert
+        Add-PageListToEpub -EpubPath $epubOutput
     Convert-ToMobi -EpubOutput $epubOutput -MobiOutput $mobiOutput -EbookConvert $ebookConvert
 
     # ============================================
