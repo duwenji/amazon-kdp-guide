@@ -2,50 +2,92 @@
 # EPUB3 pageList 追加機能
 # ============================================
 
+function Get-EpubPackageRoot {
+    param([Parameter(Mandatory=$true)] [string]$ExtractedRoot)
+
+    $contentOpf = Get-ChildItem -Path $ExtractedRoot -Recurse -Filter 'content.opf' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($contentOpf) {
+        return Split-Path -Parent $contentOpf.FullName
+    }
+
+    return $ExtractedRoot
+}
+
+function Get-RelativeEpubHref {
+    param(
+        [Parameter(Mandatory=$true)] [string]$BaseDirectory,
+        [Parameter(Mandatory=$true)] [string]$TargetPath
+    )
+
+    $basePath = (Resolve-Path $BaseDirectory -ErrorAction Stop).ProviderPath
+    if (-not $basePath.EndsWith([System.IO.Path]::DirectorySeparatorChar)) {
+        $basePath += [System.IO.Path]::DirectorySeparatorChar
+    }
+
+    $targetResolvedPath = (Resolve-Path $TargetPath -ErrorAction Stop).ProviderPath
+    $baseUri = [System.Uri]$basePath
+    $targetUri = [System.Uri]$targetResolvedPath
+    return [System.Uri]::UnescapeDataString($baseUri.MakeRelativeUri($targetUri).ToString())
+}
+
+function Get-PageLocationFromExtractedEpub {
+    param(
+        [Parameter(Mandatory=$true)] [string]$ExtractedRoot,
+        [Parameter(Mandatory=$true)] [string]$NavFilePath
+    )
+
+    $packageRoot = Get-EpubPackageRoot -ExtractedRoot $ExtractedRoot
+    $navDirectory = Split-Path -Parent $NavFilePath
+    $xhtmlFiles = @(
+        Get-ChildItem -Path $packageRoot -Recurse -Filter '*.xhtml' -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -ne $NavFilePath -and $_.Name -notmatch 'nav|toc' } |
+            Sort-Object FullName
+    )
+
+    Write-Host "  ℹ️  XHTMLファイル: $($xhtmlFiles.Count)個 in $packageRoot" -ForegroundColor Gray
+
+    $pageLinks = @()
+    $pageNum = 1
+
+    foreach ($xhtmlFile in $xhtmlFiles) {
+        $content = Get-Content -Path $xhtmlFile.FullName -Raw -Encoding UTF8
+        $matches = [regex]::Matches($content, 'id=[''\"]([^''\">]+)[''\"]')
+        $relativeHref = Get-RelativeEpubHref -BaseDirectory $navDirectory -TargetPath $xhtmlFile.FullName
+
+        foreach ($match in $matches) {
+            $anchorId = $match.Groups[1].Value
+            if (-not [string]::IsNullOrWhiteSpace($anchorId)) {
+                $pageLinks += @{
+                    Href = "$relativeHref#$anchorId"
+                    Number = $pageNum
+                }
+                $pageNum++
+            }
+        }
+    }
+
+    Write-Host "  ℹ️  抽出ポイント: $($pageLinks.Count)個" -ForegroundColor Gray
+    return $pageLinks
+}
+
 function Get-PageLocationFromEpub {
     param([Parameter(Mandatory=$true)] [string]$EpubPath)
-    
+
     $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $tempDir | Out-Null
-    
+
     try {
         $epubAsZip = $EpubPath -replace '\.epub$', '.zip'
         Copy-Item -Path $EpubPath -Destination $epubAsZip -Force | Out-Null
         Expand-Archive -Path $epubAsZip -DestinationPath $tempDir -Force | Out-Null
-        
-        # OEBPS/xhtml フォルダを探す
-        $xhtmlPath = Join-Path (Join-Path $tempDir 'OEBPS') 'xhtml'
-        if (-not (Test-Path $xhtmlPath)) {
-            $xhtmlPath = Join-Path $tempDir 'OEBPS'
+
+        $packageRoot = Get-EpubPackageRoot -ExtractedRoot $tempDir
+        $navFile = Get-ChildItem -Path $packageRoot -Recurse -Filter 'nav.xhtml' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $navFile) {
+            return @()
         }
-        if (-not (Test-Path $xhtmlPath)) {
-            $xhtmlPath = $tempDir
-        }
-        
-        $xhtmlFiles = @(Get-ChildItem -Path $xhtmlPath -Filter '*.xhtml' -File -ErrorAction SilentlyContinue)
-            Write-Host "  ℹ️  XHTMLファイル: $($xhtmlFiles.Count)個 in $xhtmlPath" -ForegroundColor Gray
-        
-        $pageLinks = @()
-        $pageNum = 1
-        
-        $xhtmlFiles | Where-Object { $_.Name -notmatch 'nav|toc' } | Sort-Object Name | ForEach-Object {
-            $content = Get-Content -Path $_.FullName -Raw -Encoding UTF8
-            $matches = [regex]::Matches($content, 'id=[''"]([^''">]+)[''"]')
-            
-            $matches | ForEach-Object {
-                $anchorId = $_.Groups[1].Value
-                if (-not [string]::IsNullOrWhiteSpace($anchorId)) {
-                    $pageLinks += @{
-                        Href = "$($_.Name)#$anchorId"
-                        Number = $pageNum
-                    }
-                    $pageNum++
-                }
-            }
-        }
-        
-        Write-Host "  ℹ️  抽出ポイント: $($pageLinks.Count)個" -ForegroundColor Gray
-        return $pageLinks
+
+        return Get-PageLocationFromExtractedEpub -ExtractedRoot $tempDir -NavFilePath $navFile.FullName
     } finally {
         Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
         if (Test-Path $epubAsZip) { Remove-Item -Path $epubAsZip -Force -ErrorAction SilentlyContinue }
@@ -54,36 +96,28 @@ function Get-PageLocationFromEpub {
 
 function Add-PageListToEpub {
     param([Parameter(Mandatory=$true)] [string]$EpubPath)
-    
+
     Write-Host "📖 EPUB3 pageList を追加中..." -ForegroundColor Cyan
-    
+
     $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $tempDir | Out-Null
     $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-    
+
     try {
         $epubAsZip = $EpubPath -replace '\.epub$', '.zip'
         Copy-Item -Path $EpubPath -Destination $epubAsZip -Force | Out-Null
         Expand-Archive -Path $epubAsZip -DestinationPath $tempDir -Force | Out-Null
 
-        $navPath = Join-Path (Join-Path $tempDir 'OEBPS') 'xhtml'
-        if (-not (Test-Path $navPath)) {
-            $navPath = Join-Path $tempDir 'OEBPS'
-        }
-        if (-not (Test-Path $navPath)) {
-            $navPath = $tempDir
-        }
-        
-        $pageLinks = Get-PageLocationFromEpub -EpubPath $EpubPath
-        if ($pageLinks.Count -eq 0) {
-            Write-Host "⚠️  参照ポイント未検出" -ForegroundColor Yellow
+        $packageRoot = Get-EpubPackageRoot -ExtractedRoot $tempDir
+        $navFile = Get-ChildItem -Path $packageRoot -Recurse -Filter 'nav.xhtml' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $navFile) {
+            Write-Host "⚠️  nav.xhtml未検出 in $packageRoot" -ForegroundColor Yellow
             return
         }
 
-        $navFile = Get-ChildItem -Path $navPath -Filter 'nav.xhtml' -ErrorAction SilentlyContinue | Select-Object -First 1
-
-        if (-not $navFile) {
-                Write-Host "⚠️  nav.xhtml未検出 in $navPath" -ForegroundColor Yellow
+        $pageLinks = Get-PageLocationFromExtractedEpub -ExtractedRoot $tempDir -NavFilePath $navFile.FullName
+        if ($pageLinks.Count -eq 0) {
+            Write-Host "⚠️  参照ポイント未検出" -ForegroundColor Yellow
             return
         }
 
@@ -104,7 +138,7 @@ function Add-PageListToEpub {
         Compress-Archive -Path "$tempDir\*" -DestinationPath $epubAsZip -Force | Out-Null
         Remove-Item -Path $EpubPath -Force
         Rename-Item -Path $epubAsZip -NewName (Split-Path -Leaf $EpubPath) -Force -ErrorAction SilentlyContinue
-        
+
         Write-Host "✅ pageList追加: $($pageLinks.Count)ポイント" -ForegroundColor Green
     } catch {
         Write-Host "❌ pageListエラー: $_" -ForegroundColor Red
