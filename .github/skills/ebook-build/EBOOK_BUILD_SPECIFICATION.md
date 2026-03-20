@@ -2,65 +2,78 @@
 
 ## Goal
 
-Provide a reusable, agent-friendly ebook build workflow based on the existing kindle conversion assets.
+Provide a reusable, agent-friendly, self-contained ebook build workflow for markdown repositories that follow numbered chapter conventions.
 
 ## Source Discovery
 
-Given sourceRoot:
+Given `sourceRoot`:
 
-1. If sourceRoot contains chapter directories matching chapterDirPattern, use sourceRoot.
-2. Otherwise, if sourceRoot/docs contains matching chapter directories, use sourceRoot/docs.
+1. If `sourceRoot` contains chapter directories matching `chapterDirPattern`, use `sourceRoot`.
+2. Otherwise, if `sourceRoot/docs` contains matching chapter directories, use `sourceRoot/docs`.
 3. Otherwise, fail with a clear diagnostic.
 
 ## Chapter Contract
 
-- Chapter directories: chapterDirPattern (default ^\\d{2}-)
-- Section markdown files: chapterFilePattern (default ^\\d{2}-.*\\.md$)
-- Cover file: coverFile (default 00-COVER.md, optional)
+- Chapter directories: `chapterDirPattern` (default `^\\d{2}-`)
+- Section markdown files: `chapterFilePattern` (default `^\\d{2}-.*\\.md$`)
+- Cover file: `coverFile` (default `00-COVER.md`, optional)
+- Root `README.md`: optional, copied into staging when present so converter-side TOC updates remain safe
 
 ## Staging Contract
 
 The runner creates an isolated temporary workspace:
 
-- temp/book/                      (staged source root)
-- temp/book/kindle/               (conversion scripts + staged metadata + staged css)
-- temp/book/kindle/output/        (intermediate outputs)
+- `temp/book/` staged source root
+- `temp/book/kindle/` staged conversion scripts, metadata, and stylesheet
+- `temp/book/kindle/output/` intermediate outputs
 
 ## Build Steps
 
-1. Validate required toolchain and files.
-2. Stage source markdown content.
-3. Stage conversion scripts and assets.
-4. Patch staged script for non-interactive execution.
-5. Run staged convert-to-kindle.ps1.
-6. Copy selected format outputs to outputDir with projectName base.
-7. Clean temp workspace unless preserveTemp is enabled.
+1. Resolve configuration values from command-line parameters, config file, and defaults.
+2. Validate required file paths and discover the effective content root.
+3. Stage chapter content, optional cover, and optional root `README.md`.
+4. Stage converter scripts, metadata, and stylesheet.
+5. Patch the staged converter for non-interactive execution.
+6. Run the staged converter.
+7. Copy requested artifacts to `outputDir` using `projectName` as the filename base.
+8. Fail if no requested artifacts were copied.
+9. Clean temporary workspace unless `preserveTemp` is enabled.
+
+## Page-List Behavior
+
+- Default behavior is controlled by `enablePageList`.
+- If `enablePageList: true` and `add-pagelist-functions.ps1` is missing, the runner logs a warning and continues with page-list disabled.
 
 ## Format Behavior
 
-- epub: expected if Pandoc is available
-- azw3: expected when ebook-convert is available
-- mobi: expected when ebook-convert is available
+- `epub`: expected if Pandoc is available
+- `azw3`: expected when `ebook-convert` is available
+- `mobi`: expected when `ebook-convert` is available
 
 Missing optional formats produce warnings, not hard failures.
 
 ## Error Strategy
 
 Hard fail:
+
 - source root not found
-- metadata/style not found
-- required conversion script missing
+- metadata or stylesheet not found
+- core conversion script missing
 - no chapter content found
 - staged converter exits with non-zero status
+- no requested artifacts copied to output directory
 
 Soft warnings:
+
 - optional output format not produced
-- page-list step logs warning but converter continues
+- page-list requested but helper script missing
 
 ## Reuse Scope
 
-Reusable across repositories that satisfy chapter contract.
+Reusable across repositories that satisfy the chapter contract and provide project-specific config + metadata.
 
-Known target examples:
-- amazon-kdp-guide
-- github-copilot-skills-tutorial/docs (partial sections may be skipped by naming rules)
+Project-specific responsibilities:
+
+- maintain each project's `configs/*.build.json`
+- maintain each project's `configs/*.metadata.yaml`
+- keep `projectName`, `sourceRoot`, and output policy aligned with repository layout

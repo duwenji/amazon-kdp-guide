@@ -2,6 +2,8 @@
   "sourceRoot": "..\\github-copilot-skills-tutorial\\docs",
   "outputDir": "..\\github-copilot-skills-tutorial\\ebook-output",
   "projectName": "github-copilot-skills-tutorial",
+  "metadataFile": ".\\.github\\skills\\ebook-build\\configs\\amazon-kdp-guide.metadata.yaml",
+  "styleFile": ".\\.github\\skills\\ebook-build\\assets\\style.css",
   "formats": ["epub", "azw3", "mobi"],
   "enablePageList": true,
   "chapterDirPattern": "^\\d{2}-",

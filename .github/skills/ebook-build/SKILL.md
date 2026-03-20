@@ -85,6 +85,7 @@ The skill writes artifacts such as:
 
 - This skill is intentionally non-interactive for agent execution.
 - It patches staged conversion scripts to disable terminal prompts.
+- Regenerated files under `ebook-output/` are treated as reviewable build artifacts and should be included in commits when the source content, metadata, styles, or build flow changes.
 - For the operational guide, see ./docs/README.md.
 - For detailed flow and constraints, see ./EBOOK_BUILD_SPECIFICATION.md.
 - For validation criteria, see ./VALIDATION_CHECKLIST.md and ./docs/KINDLE-COMPATIBILITY-CHECKLIST.md.
