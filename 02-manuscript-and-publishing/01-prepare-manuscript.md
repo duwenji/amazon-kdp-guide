@@ -88,7 +88,7 @@ clean-architecture/
 # 書籍の基本情報
 title: "クリーンアーキテクチャ完全ガイド"
 subtitle: "実践的な設計パターンとベストプラクティス"
-author: "あなたの名前"
+author: "杜 文吉"
 publisher: "あなたの出版社名"
 language: "ja"  # 日本語
 

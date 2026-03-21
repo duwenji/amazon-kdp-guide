@@ -37,7 +37,7 @@
 
 ### **Amazon アカウントがない場合**
 
-**URL**: https://account.amazon.com/
+**URL**: https://www.amazon.co.jp/
 
 ```
 1. 「新規登録」をクリック

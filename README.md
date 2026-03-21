@@ -149,7 +149,7 @@ shared skill の探索順:
   → ebook-output/clean-architecture.azw3 を取得
   
 ステップ 2️⃣: AWS アカウント作成
-  → https://account.amazon.com/
+  → https://www.amazon.co.jp/
   
 ステップ 3️⃣: KDP にサインアップ
   → https://kdp.amazon.com
