@@ -14,7 +14,7 @@
 - メタデータ: `.github/skills-config/ebook-build/amazon-kdp-guide.metadata.yaml`
 
 ## Shared skill discovery order
-1. `.github/skills/shared-copilot-skills/*`
+1. `.github/skills/shared-skills/*`
 2. `.github/skills/*`
 3. `../shared-copilot-skills/*`
 
