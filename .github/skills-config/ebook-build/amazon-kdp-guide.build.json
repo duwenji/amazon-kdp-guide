@@ -1,5 +1,5 @@
 {
-  "sourceRoot": ".",
+  "sourceRoot": "./docs",
   "outputDir": "./ebook-output",
   "projectName": "amazon-kdp-guide",
   "metadataFile": "./.github/skills-config/ebook-build/amazon-kdp-guide.metadata.yaml",
