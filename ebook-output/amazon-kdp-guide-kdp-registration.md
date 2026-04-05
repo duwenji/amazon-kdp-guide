@@ -1,9 +1,9 @@
 # KDP 登録情報一式: Amazon KDP 完全ガイド
 
-- 生成日時: 2026-04-05 10:51:35
-- プロジェクト名: `amazon-kdp-guide`
-- 元メタデータ: `C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.metadata.yaml`
-- KDP 追加メタデータ: `C:\dev\apps\amazon-kdp-guide\.github\skills-config\ebook-build\amazon-kdp-guide.kdp.yaml`
+- 生成日時: 2026-04-05 12:58:07
+- プロジェクト名: amazon-kdp-guide
+- 元メタデータ: C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.metadata.yaml
+- KDP 追加メタデータ: C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.kdp.yaml
 
 ## 1. 基本書誌情報
 
@@ -60,8 +60,8 @@
 
 ## 7. アップロード対象ファイル
 
-- EPUB: `C:\dev\apps\amazon-kdp-guide\.\ebook-output\amazon-kdp-guide.epub`
-- PDF: `C:\dev\apps\amazon-kdp-guide\.\ebook-output\amazon-kdp-guide.pdf`
+- EPUB: C:\dev\apps\amazon-kdp-guide\.\ebook-output\amazon-kdp-guide.epub
+- PDF: C:\dev\apps\amazon-kdp-guide\.\ebook-output\amazon-kdp-guide.pdf
 
 ## 8. 公開前 TODO
 
