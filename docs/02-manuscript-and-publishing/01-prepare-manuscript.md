@@ -13,6 +13,17 @@
 
 **学習時間**: 約 30 分
 
+## この章の前提
+
+- 利用側リポジトリ（consumer repo）: `amazon-kdp-guide`
+  - GitHub: `https://github.com/duwenji/amazon-kdp-guide`
+  - ローカル: `c:\dev\apps\amazon-kdp-guide`
+  - 役割: 原稿・設定ファイル・実行用 wrapper を持つ利用側リポジトリ
+- 共有リポジトリ（shared repo）: `shared-copilot-skills`
+  - GitHub: `https://github.com/duwenji/shared-copilot-skills`
+  - 役割: `ebook-build` の共通実装を提供する共有リポジトリ
+- 実行用 wrapper（利用者向け入口）: `./.github/skills-config/ebook-build/invoke-build.ps1`
+
 ---
 
 ## 🎯 原稿準備の全体フロー
@@ -24,7 +35,7 @@
   ↓
 ③ CSS スタイルを調整（style.css / print.css）
   ↓
-④ 変換ツール実行（invoke-ebook-build.ps1）
+④ 前提ツールを確認し、invoke-build.ps1 を実行
   ↓
 ⑤ EPUB / PDF / KDP 登録 Markdown を生成
   ↓
@@ -261,16 +272,36 @@ em, i {
 
 ---
 
-## 🔄 ステップ 4: 変換ツール実行（Windows PowerShell）
+## 🔄 ステップ 4: 環境構築と変換ツール実行（Windows PowerShell）
 
-### **convert-to-kindle.ps1 の実行**
+### **前提ツールの確認**
+
+`ebook-build` を実行する前に、以下を準備してください。
+
+- `Pandoc`：Markdown から EPUB / HTML を生成
+- `Node.js`：PDF 生成時の補助スクリプトに使用
+- `Chrome` または `Edge`：HTML を PDF に変換
+- `git submodule update --init --recursive`：共有 Skill を初回取得する場合に必要
+
+> 💡 EPUB のみを生成する場合は `Pandoc` が特に重要です。`PDF` も出力する場合は `Node.js` と `Chrome/Edge` も必要です。
+
+確認コマンド:
+
+```powershell
+pandoc --version
+node -v
+git submodule update --init --recursive
+```
+
+### **`invoke-build.ps1` の実行**
 
 ```powershell
 # c:\dev\apps\clean-architecture で実行
 
-.\.github\skills\ebook-build\scripts\invoke-ebook-build.ps1 `
-  -ConfigFile .\.github\skills-config\ebook-build\clean-architecture.build.json
+.\.github\skills-config\ebook-build\invoke-build.ps1
 ```
+
+> 💡 この実行用 wrapper は内部で共有実装 `invoke-ebook-build.ps1` に委譲されます。利用者は通常 `invoke-build.ps1` だけを実行すれば十分です。
 
 ### **変換ツールの役割**
 
@@ -321,6 +352,16 @@ ebook-output/
 ---
 
 ## ❌ よくあるエラーと解決方法
+
+### **エラー 0: ビルドコマンドが見つからない / 実行できない**
+
+**原因**: `Pandoc` や `Node.js` が未インストール、または初回の submodule 初期化が未実施
+
+**対策**:
+- ✅ `pandoc --version` と `node -v` が成功するか確認
+- ✅ PDF 生成時は `Chrome` または `Edge` がインストールされているか確認
+- ✅ 初回 clone 後は `git submodule update --init --recursive` を実行
+- ✅ 実行用 wrapper（利用者向け入口）として `./.github/skills-config/ebook-build/invoke-build.ps1` を実行
 
 ### **エラー 1: 日本語が文字化けする**
 

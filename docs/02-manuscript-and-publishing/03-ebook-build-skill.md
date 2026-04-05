@@ -12,6 +12,17 @@
 
 **学習時間**: 約 15 分
 
+## この章の前提
+
+- 利用側リポジトリ（consumer repo）: `amazon-kdp-guide`
+  - GitHub: `https://github.com/duwenji/amazon-kdp-guide`
+  - ローカル: `c:\dev\apps\amazon-kdp-guide`
+  - 役割: 実行設定と実行用 wrapper を持つ利用側リポジトリ
+- 共有リポジトリ（shared repo）: `shared-copilot-skills`
+  - GitHub: `https://github.com/duwenji/shared-copilot-skills`
+  - 役割: `ebook-build` の共有実装を提供する共有リポジトリ
+- 実行用 wrapper（利用者向け入口）: `./.github/skills-config/ebook-build/invoke-build.ps1`
+
 > 💡 `01-prepare-manuscript.md` では手動での変換手順を解説しています。  
 > このセクションでは、同じ変換処理をスクリプト化した **ebook-build スキル** による自動化を紹介します。
 
@@ -21,7 +32,7 @@
 
 `ebook-build` は、Markdown で書かれた書籍をワンコマンドで **EPUB / PDF / KDP 登録 Markdown** に変換するための再利用可能なビルドフローです。
 
-このリポジトリでは `.github/skills-config/ebook-build/` の wrapper から実行し、共有の `shared-copilot-skills/ebook-build` 実装へ委譲します。GitHub Copilot Agent モードからの利用にも、PowerShell からの直接実行にも対応しています。
+このリポジトリでは `.github/skills-config/ebook-build/` の **実行用 wrapper** から実行し、共有リポジトリ（shared repo）である `shared-copilot-skills/ebook-build` の実装へ委譲します。GitHub Copilot Agent モードからの利用にも、PowerShell からの直接実行にも対応しています。
 
 > ⚠️ このスキルが自動化するのは **出版準備** までです。KDP 管理画面への最終アップロード、入力確認、公開申請は人が実施してください。
 
@@ -35,24 +46,30 @@
 
 ### スキルのファイル構成
 
+利用側リポジトリ（consumer repo）で管理する設定と、共有リポジトリ（shared repo）の `ebook-build` 実装に分かれています。
+
 ```text
-.github/skills/ebook-build/
-├── SKILL.md                                  ← Skill 定義（Copilot 向け）
-├── EBOOK_BUILD_SPECIFICATION.md              ← 実装仕様
-├── VALIDATION_CHECKLIST.md                   ← 検証チェックリスト
-├── configs/
-│   ├── amazon-kdp-guide.build.json           ← このリポジトリ用の実行設定
-│   ├── amazon-kdp-guide.metadata.yaml        ← 書籍メタデータ
-│   └── github-copilot-skills-tutorial.build.json
-├── assets/
-│   └── style.css                             ← EPUB スタイルシート
-├── docs/
-│   ├── README.md                             ← 実行ガイド（詳細版）
-│   └── KINDLE-COMPATIBILITY-CHECKLIST.md     ← Kindle 互換性チェック
-└── scripts/
-    ├── invoke-ebook-build.ps1                ← 実行エントリポイント
-    ├── convert-to-kindle.ps1                 ← 変換コア
-    └── add-pagelist-functions.ps1            ← page-list 補助
+.github/
+├── skills-config/
+│   └── ebook-build/
+│       ├── invoke-build.ps1                  ← 実行用 wrapper（利用者向け入口）
+│       ├── amazon-kdp-guide.build.json       ← このリポジトリ用の実行設定
+│       ├── amazon-kdp-guide.metadata.yaml    ← 書籍メタデータ
+│       └── amazon-kdp-guide.kdp.yaml         ← KDP 登録補助メタデータ
+└── skills/
+    └── ebook-build/
+        ├── SKILL.md                          ← Skill 定義（Copilot 向け）
+        ├── EBOOK_BUILD_SPECIFICATION.md      ← 実装仕様
+        ├── VALIDATION_CHECKLIST.md           ← 検証チェックリスト
+        ├── assets/
+        │   └── style.css                     ← EPUB スタイルシート
+        ├── docs/
+        │   ├── README.md                     ← 実行ガイド（詳細版）
+        │   └── KINDLE-COMPATIBILITY-CHECKLIST.md
+        └── scripts/
+            ├── invoke-ebook-build.ps1        ← 共有実装
+            ├── convert-to-kindle.ps1         ← 変換コア
+            └── add-pagelist-functions.ps1    ← page-list 補助
 ```
 
 ---
@@ -83,36 +100,46 @@ node -v
 
 HTML を印刷用 PDF に変換するために使用します。ローカルにどちらか一方が入っていれば十分です。
 
+### Shared Skill の取得（初回のみ）
+
+共有 Skill をまだ取得していない場合は、以下を実行します。
+
+```powershell
+git submodule update --init --recursive
+```
+
+> 💡 EPUB のみを生成する場合は `Pandoc` が必須です。`PDF` も生成する場合は `Node.js` と `Chrome/Edge` も必要です。
+
 ---
 
 ## 🚀 実行方法
 
-### 最短実行（設定ファイル指定）
+### 最短実行（推奨）
 
-このリポジトリには設定ファイルが用意されているため、以下の 1 コマンドで実行できます。
+このリポジトリでは実行用 wrapper が既定の設定ファイルを読み込むため、以下の 1 コマンドで実行できます。
 
 ```powershell
 cd c:\dev\apps\amazon-kdp-guide
-.\.github\skills\ebook-build\scripts\invoke-ebook-build.ps1 `
+.\.github\skills-config\ebook-build\invoke-build.ps1
+```
+
+### 別の設定ファイルを指定する場合
+
+```powershell
+cd c:\dev\apps\amazon-kdp-guide
+.\.github\skills-config\ebook-build\invoke-build.ps1 `
   -ConfigFile .\.github\skills-config\ebook-build\amazon-kdp-guide.build.json
 ```
 
-### パラメータを直接指定する場合
-
-```powershell
-cd c:\dev\apps\amazon-kdp-guide
-.\.github\skills\ebook-build\scripts\invoke-ebook-build.ps1 `
-  -SourceRoot "." `
-  -OutputDir ".\ebook-output" `
-  -ProjectName "amazon-kdp-guide" `
-  -Formats @("epub", "pdf", "kdp-markdown")
-```
+> 💡 `invoke-build.ps1` は実行用 wrapper（利用者向け入口）です。内部で共有実装 `invoke-ebook-build.ps1` を呼び出します。
 
 ---
 
-## ⚙️ パラメータ一覧
+## ⚙️ `.build.json` で調整できる主な設定項目
 
-| パラメータ | 必須 | 既定値 | 説明 |
+実行用 wrapper は `*.build.json` を読み込み、以下の設定値を共有実装に渡します。
+
+| 設定項目 | 必須 | 既定値 | 説明 |
 |---|---|---|---|
 | `SourceRoot` | ✅ | — | チャプターフォルダを含むルートディレクトリ（またはそれ以下の docs/ ルート） |
 | `OutputDir` | — | `<SourceRoot>/ebook-output` | 成果物の出力先フォルダ |
@@ -194,7 +221,8 @@ KDP へのアップロードには通常 **EPUB** を使用し、`*-kdp-registra
 | `docs/README.md` | 実行ガイド（詳細版） |
 | `VALIDATION_CHECKLIST.md` | 検証チェックリスト |
 | `docs/KINDLE-COMPATIBILITY-CHECKLIST.md` | Kindle 互換性チェック |
-| `scripts/invoke-ebook-build.ps1` | ビルド実行スクリプト（エントリポイント） |
+| `.github/skills-config/ebook-build/invoke-build.ps1` | 実行用 wrapper（利用者向け入口） |
+| `scripts/invoke-ebook-build.ps1` | wrapper から呼ばれる共有実装 |
 
 ---
 
@@ -205,7 +233,7 @@ KDP へのアップロードには通常 **EPUB** を使用し、`*-kdp-registra
 | スキル名 | `ebook-build` |
 | 対応成果物 | EPUB / PDF / KDP 登録 Markdown |
 | 実行方法 | PowerShell / GitHub Copilot Agent |
-| 前提ツール | Pandoc + Node.js + Chrome/Edge |
+| 前提ツール | Pandoc + Node.js + Chrome/Edge + 初回 `git submodule update --init --recursive` |
 | 設定ファイル | `.github/skills-config/ebook-build/amazon-kdp-guide.build.json` |
 | 出力先 | `ebook-output/` |
 

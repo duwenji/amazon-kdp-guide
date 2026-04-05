@@ -16,6 +16,19 @@
 
 **学習時間**: 約 25 分
 
+## この章の前提
+
+- 利用側リポジトリ（consumer repo）: `amazon-kdp-guide`
+  - GitHub: `https://github.com/duwenji/amazon-kdp-guide`
+  - ローカル: `c:\dev\apps\amazon-kdp-guide`
+  - 役割: KDP にアップロードする成果物（`.epub` / `*-kdp-registration.md`）を保持する利用側リポジトリ
+- 共有リポジトリ（shared repo）: `shared-copilot-skills`
+  - GitHub: `https://github.com/duwenji/shared-copilot-skills`
+  - 役割: `ebook-build` の共通実装を提供する共有リポジトリ
+- 事前完了タスク:
+  - `01-prepare-manuscript.md` に従って `ebook-output/` の成果物生成を完了していること
+  - 必要に応じて `./.github/skills-config/ebook-build/invoke-build.ps1` で再生成できること
+
 ---
 
 ## 🎯 アップロード～出版の全体フロー
@@ -113,6 +126,8 @@ https://kdp.amazon.com
 
 ### **ファイルアップロード方法**
 
+> 💡 この章では、`c:\dev\apps\amazon-kdp-guide\ebook-output\` に生成済みの成果物を使う想定です。
+
 1. 「本の内容」セクションで「アップロード中…」をクリック
 2. ファイル選択ダイアログで `clean-architecture.epub` を選択
 3. アップロード完了を待つ（ファイルサイズによって数分）
@@ -141,7 +156,7 @@ https://kdp.amazon.com
 
 | エラー | 原因 | 対策 |
 |--------|------|------|
-| ファイルが読み込めない | 形式が不正 | `invoke-ebook-build.ps1` で再生成 |
+| ファイルが読み込めない | 形式が不正 | `invoke-build.ps1` で再生成 |
 | 目次が見つからない | EPUB の nav.xhtml が不正 | メタデータ・CSS を確認 |
 | 画像が表示されない | 画像フォーマット不正 | PNG / JPG に変換 |
 | 文字化けがある | エンコーディング不正 | UTF-8 で再変換 |
