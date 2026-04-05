@@ -1,15 +1,15 @@
-# 01. 原稿準備（AZW3 ファイル生成）
+# 01. 原稿準備（EPUB / PDF / KDP 登録情報の生成）
 
 ## 📖 このセクションで学べること
 
 このセクションを読むと、以下が理解できます：
 
-- ✅ Markdown から AZW3 への正しい変換方法
+- ✅ Markdown から `EPUB` / `PDF` への正しい変換方法
 - ✅ CSS スタイル設定とレイアウト
 - ✅ メタデータ（タイトル、著者、説明）の設定
 - ✅ 目次（TOC）の生成
-- ✅ 品質チェック（Kindle Previewer での確認）
-- ✅ よくあるフォーマットエラーと解決方法
+- ✅ 品質チェック（Kindle Previewer / PDF での確認）
+- ✅ KDP 登録用 Markdown の活用方法
 
 **学習時間**: 約 30 分
 
@@ -20,15 +20,15 @@
 ```
 ① Markdown 原稿を確認
   ↓
-② メタデータを設定（metadata.yaml）
+② メタデータを設定（metadata.yaml / *.kdp.yaml）
   ↓
-③ CSS スタイルを調整（style.css）
+③ CSS スタイルを調整（style.css / print.css）
   ↓
-④ 変換ツール実行（convert-to-kindle.ps1）
+④ 変換ツール実行（invoke-ebook-build.ps1）
   ↓
-⑤ AZW3 / EPUB ファイルを生成
+⑤ EPUB / PDF / KDP 登録 Markdown を生成
   ↓
-⑥ Kindle Previewer で確認
+⑥ Kindle Previewer / PDF ビューアで確認
   ↓
 ⑦ KDP にアップロード
 ```
@@ -274,24 +274,24 @@ em, i {
 
 ### **変換ツールの役割**
 
-- ✅ Markdown → HTML に変換
+- ✅ Markdown → HTML / EPUB に変換
 - ✅ CSS スタイルを適用
 - ✅ メタデータを埋め込み
 - ✅ 目次（TOC）を自動生成
-- ✅ AZW3 / EPUB / MOBI ファイルを生成
+- ✅ `EPUB` / `PDF` / `*-kdp-registration.md` を生成
 
 ### **出力ファイル**
 
 ```
 ebook-output/
-├── clean-architecture.azw3    ← KDP への推奨フォーマット
-├── clean-architecture.epub    ← 汎用電子書籍フォーマット
-└── clean-architecture.mobi    ← 旧形式（参考用）
+├── clean-architecture.epub                  ← KDP 本文アップロード用
+├── clean-architecture.pdf                   ← 固定レイアウト確認用
+└── clean-architecture-kdp-registration.md   ← KDP 登録情報の転記用
 ```
 
 ---
 
-## 🔍 ステップ 5: Kindle Previewer での確認
+## 🔍 ステップ 5: EPUB / PDF の確認
 
 ### **Kindle Previewer のダウンロード**
 
@@ -300,8 +300,9 @@ ebook-output/
 ### **プレビューの手順**
 
 1. Kindle Previewer を起動
-2. 「File」→「Open」→「clean-architecture.azw3」を選択
-3. 「Kindle Paperwhite」デバイスで表示確認
+2. 「File」→「Open」→「clean-architecture.epub」を選択
+3. 「Kindle Paperwhite」など複数デバイスで表示確認
+4. あわせて `clean-architecture.pdf` を開き、図版や改ページを確認
 
 ### **確認チェックリスト**
 
@@ -313,7 +314,8 @@ ebook-output/
 ☐ テーブルが正しく表示されている
 ☐ ページ区切りが自然な箇所にある
 ☐ 日本語が正しく表示されている（文字化けなし）
-☐ リンクが機能している（内部リンク、外部リンク）
+☐ PDF でもレイアウト崩れがない
+☐ `*-kdp-registration.md` の内容が最新である
 ```
 
 ---
@@ -375,8 +377,10 @@ $file | Out-File -Path "file.md" -Encoding UTF8
 ☐ 説明文が読みやすい
 
 フォーマット：
-☐ AZW3 ファイルが生成されている
+☐ EPUB ファイルが生成されている
+☐ PDF ファイルが生成されている
 ☐ Kindle Previewer で正しく表示される
+☐ `*-kdp-registration.md` が生成されている
 ☐ 目次が生成されている
 
 ライセンス・著作権：
