@@ -2,7 +2,7 @@
 
 Amazon Kindle Direct Publishing（KDP）で電子書籍を出版・販売するための **完全マニュアル**です。アカウント作成から販売開始まで、すべての手順を詳しく解説します。
 
-> 💡 ブラウザで https://duwenji.github.io/spa-quiz-app/ を開くと、この教材をクイズ形式で学習できます。
+> 💡 ブラウザで https://duwenji.github.io/spa-quiz-app/ を開くと、関連トピックをクイズ形式で復習できます。
 
 ---
 
