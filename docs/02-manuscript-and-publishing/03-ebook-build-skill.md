@@ -23,6 +23,8 @@
 
 このリポジトリでは `.github/skills-config/ebook-build/` の wrapper から実行し、共有の `shared-copilot-skills/ebook-build` 実装へ委譲します。GitHub Copilot Agent モードからの利用にも、PowerShell からの直接実行にも対応しています。
 
+> ⚠️ このスキルが自動化するのは **出版準備** までです。KDP 管理画面への最終アップロード、入力確認、公開申請は人が実施してください。
+
 ### できること
 
 1. 番号付き Markdown チャプター構造（`01-`, `02-` ...）からコンテンツを収集
