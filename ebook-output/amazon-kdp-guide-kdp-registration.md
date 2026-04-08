@@ -1,6 +1,6 @@
 # KDP 登録情報一式: Amazon KDP 完全ガイド
 
-- 生成日時: 2026-04-05 19:05:35
+- 生成日時: 2026-04-09 00:14:00
 - プロジェクト名: amazon-kdp-guide
 - 元メタデータ: C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.metadata.yaml
 - KDP 追加メタデータ: C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.kdp.yaml
@@ -14,7 +14,7 @@
 | 著者 | 杜 文吉 |
 | 言語 | ja-JP |
 | 出版社 | Self Published |
-| 権利 | Creative Commons Attribution 4.0 International |
+| 権利 | Creative Commons Attribution 4.0 International License |
 | 識別子 | amazon-kdp-guide-v1 |
 | 出版日 | 2026-03-20 |
 | ISBN | Kindle 版のみなら通常不要 |

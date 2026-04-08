@@ -1,40 +1,31 @@
----
-title: Amazon KDP 完全ガイド
-subtitle: Kindle電子書籍出版マニュアル
-creator: 杜 文吉
-date: 2026-03-20
+title: "Amazon KDP 完全ガイド"
+subtitle: "Kindle 電子書籍出版マニュアル"
+creator: "杜 文吉"
+date: "2026-03-20"
 language: ja-JP
-rights: Creative Commons Attribution 4.0 International
-identifier: amazon-kdp-guide-v1
-cover-image: null
-
-# Pandoc メタデータ
-toc: true
-toc-depth: 2
-number-sections: false
-shift-heading-level-by: -1
-
-# EPUB設定
-epub-version: 3
-epub-cover-image: null
-
-# HTML/EPUB用メタデータ
+publisher: "Self Published"
+rights: "Creative Commons Attribution 4.0 International License"
+identifier: "amazon-kdp-guide-v1"
+description: |
+  Amazon Kindle Direct Publishing（KDP）で電子書籍を出版・販売するための
+  実践的なステップバイステップガイドです。
+  アカウント作成から販売開始まで、必要な手順と判断ポイントを順序立てて整理し、
+  初心者でもすぐに取り組める形でまとめています。
 keywords:
   - Amazon KDP
-  - Kindle電子書籍
+  - Kindle
   - Self-Publishing
   - 電子出版
   - インディー出版
-
-# 書籍詳細
-description: >
-  Amazon Kindle Direct Publishing（KDP）で電子書籍を出版・販売するための完全なステップバイステップガイド。
-  アカウント作成から販売開始まで、すべての手順を詳しく解説します。
-  初心者でもすぐに始められるよう、実践的な情報が満載です。
-
-publisher: Self Published
-isbn: null
-
-# フォントとスタイル（Calibre互換）
-css:
-  - style.css
+cover: "00-COVER.md"
+toc: true
+toc-depth: 2
+chapters:
+  auto-discover: true
+  dir-pattern: "^\\d{2}-"
+  file-pattern: "^\\d{2}-.*\\.md$"
+include-readme: false
+version: "1.0"
+revision-date: "2026-04-08"
+license: "CC-BY-4.0"
+license-url: "https://creativecommons.org/licenses/by/4.0/"
