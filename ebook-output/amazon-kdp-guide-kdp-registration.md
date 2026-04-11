@@ -1,6 +1,6 @@
 # KDP 登録情報一式: Amazon KDP 完全ガイド
 
-- 生成日時: 2026-04-09 00:14:00
+- 生成日時: 2026-04-11 16:31:39
 - プロジェクト名: amazon-kdp-guide
 - 元メタデータ: C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.metadata.yaml
 - KDP 追加メタデータ: C:\dev\apps\amazon-kdp-guide\.\.github\skills-config\ebook-build\amazon-kdp-guide.kdp.yaml
