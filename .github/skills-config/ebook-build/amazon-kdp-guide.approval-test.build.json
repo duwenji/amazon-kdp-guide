@@ -12,9 +12,13 @@
   "chapterDirPattern": "^\\d{2}-",
   "chapterFilePattern": "^\\d{2}-.*\\.md$",
   "coverFile": "00-COVER.md",
+  "coverTemplateMode": "template",
+  "coverTemplate": "classic",
+  "buildPhase": "continue",
+  "requireManuscriptApproval": true,
+  "approvalTokenFile": "./ebook-output/amazon-kdp-guide.manuscript.approved",
   "mermaidMode": "required",
   "mermaidFormat": "svg",
   "failOnMermaidError": true,
   "preserveTemp": false
 }
-

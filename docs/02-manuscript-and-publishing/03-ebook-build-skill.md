@@ -171,7 +171,7 @@ cd c:\dev\apps\amazon-kdp-guide
 ### スタイル（フォント・余白・見出しデザイン）
 
 ```text
-.github/skills/ebook-build/assets/style.css
+../shared-copilot-skills/ebook-build/assets/style.css
 ```
 
 EPUB に適用される CSS ファイルです。Kindle 互換性を維持しながら調整してください。
@@ -217,12 +217,11 @@ KDP へのアップロードには通常 **EPUB** を使用し、`*-kdp-registra
 
 | ファイル | 説明 |
 |---|---|
-| `SKILL.md` | Copilot 向けスキル定義（パラメータ仕様） |
-| `docs/README.md` | 実行ガイド（詳細版） |
-| `VALIDATION_CHECKLIST.md` | 検証チェックリスト |
-| `docs/KINDLE-COMPATIBILITY-CHECKLIST.md` | Kindle 互換性チェック |
+| `../shared-copilot-skills/ebook-build/SKILL.md` | Copilot 向けスキル定義（パラメータ仕様） |
+| `../shared-copilot-skills/ebook-build/EBOOK_BUILD_SPECIFICATION.md` | 詳細な処理仕様 |
+| `../shared-copilot-skills/ebook-build/VALIDATION_CHECKLIST.md` | 検証チェックリスト |
 | `.github/skills-config/ebook-build/invoke-build.ps1` | 実行用 wrapper（利用者向け入口） |
-| `scripts/invoke-ebook-build.ps1` | wrapper から呼ばれる共有実装 |
+| `../shared-copilot-skills/ebook-build/scripts/invoke-ebook-build.ps1` | wrapper から呼ばれる共有実装 |
 
 ---
 
